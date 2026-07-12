@@ -2,29 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEMO ESPORTS | Official</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DEMO ESPORTS | Official Portal</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Inter:wght@400;600;700&display=swap');
         :root { --bg: #050505; --card: #101015; --primary: #2962ff; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --text: #ffffff; --muted: #a1a1aa; --border: #27272a; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 90px; margin: 0; }
+        .app-container { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(5,5,5,0.9); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
         .card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin: 15px 20px; }
-        .btn { padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; width: 100%; margin: 5px 0; }
+        input, select, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); background: #1a1a1f; color: white; font-family: inherit; }
+        .btn { cursor: pointer; border: none; font-weight: 700; }
         .btn-blue { background: var(--primary); color: white; }
-        input { width: 100%; padding: 12px; margin: 5px 0; background: #1a1a1f; border: 1px solid var(--border); color: white; border-radius: 8px; }
+        .btn-red { background: var(--danger); color: white; }
         .status-card { padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 13px; }
         .pending { background: #3d2b00; border-left: 4px solid var(--warning); }
         .confirmed { background: #062615; border-left: 4px solid var(--success); }
-        .view-section { display: none; }
-        .view-section.active { display: block; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: #050505; border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(3, 1fr); padding: 10px 0; z-index: 200; }
+        .nav-item { text-align: center; font-size: 10px; color: var(--muted); cursor: pointer; }
+        .nav-item.active { color: var(--primary); }
     </style>
 </head>
 <body>
 
-<div id="app" style="max-width: 480px; margin: 0 auto;">
+<div class="app-container">
+    <div class="header">
+        <h2 style="font-family: 'Teko', sans-serif;">🦅 DEMO ESPORTS</h2>
+        <button class="btn btn-blue" style="width: auto; padding: 5px 15px;" onclick="window.location.href='https://chat.whatsapp.com/YOUR_GROUP_LINK'">JOIN NOW</button>
+    </div>
+
     <div id="view-home" class="view-section active">
-        <h1 style="text-align: center; margin: 20px;">DEMO ESPORTS</h1>
-        <button class="btn btn-blue" onclick="switchTab('scrims')">JOIN BATTLE ⚔️</button>
-        <div id="matches-list"></div>
+        <div style="padding: 20px;"><button class="btn btn-blue" style="padding: 15px;" onclick="switchTab('scrims')">JOIN BATTLE ⚔️</button></div>
+        <div id="home-content" class="card"><h3>ACTIVE LOBBIES</h3><div id="matches-home"></div></div>
     </div>
 
     <div id="view-scrims" class="view-section">
@@ -42,11 +53,11 @@
             <input type="text" id="phone" placeholder="Mobile Number">
             <button class="btn btn-blue" onclick="login()">LOGIN</button>
             <input type="password" id="adminPass" placeholder="Admin Pass">
-            <button class="btn btn-blue" onclick="loginAdmin()">ADMIN LOGIN</button>
+            <button class="btn btn-red" onclick="loginAdmin()">ADMIN LOGIN</button>
         </div>
         <div id="player-area" style="display:none;">
-            <div id="my-bookings" style="padding: 20px;"></div>
-            <button class="btn" onclick="logout()">Logout</button>
+            <div id="my-bookings" style="padding: 0 20px;"></div>
+            <div style="padding: 20px;"><button class="btn btn-red" onclick="logout()">Logout</button></div>
         </div>
     </div>
 
@@ -54,11 +65,18 @@
         <div class="card">
             <input type="text" id="mName" placeholder="Match Name">
             <input type="text" id="mWp" placeholder="WhatsApp Link">
-            <input type="text" id="mNote" placeholder="Notice (ID Pass details)">
+            <input type="text" id="mNote" placeholder="Notice (e.g., ID Pass time)">
             <button class="btn btn-blue" onclick="addMatch()">CREATE LOBBY</button>
         </div>
         <div id="admin-list" class="card"></div>
+        <button class="btn btn-red" onclick="resetData()">RESET ALL DATA</button>
     </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('home')">🏠<br>Home</div>
+        <div class="nav-item" onclick="switchTab('scrims')">⚔️<br>Scrims</div>
+        <div class="nav-item" onclick="switchTab('profile')">👤<br>Profile</div>
+    </nav>
 </div>
 
 <script>
@@ -73,26 +91,29 @@
         if(t==='admin') renderAdmin();
     }
 
+    function addMatch() {
+        matches.push({id:'m'+Date.now(), name:document.getElementById('mName').value, wp:document.getElementById('mWp').value, note:document.getElementById('mNote').value});
+        localStorage.setItem('demoMatches', JSON.stringify(matches));
+        alert("Match Created!");
+    }
+
     function renderMatches() {
         let h = '';
         matches.forEach(m => h += `<div class="card" onclick="selectLobby('${m.id}')">${m.name}</div>`);
         document.getElementById('lobby-grid').innerHTML = h;
     }
 
-    function selectLobby(id) {
-        selectedMatchId = id;
-        document.getElementById('booking-area').style.display = 'block';
-    }
+    function selectLobby(id) { selectedMatchId = id; document.getElementById('booking-area').style.display = 'block'; }
 
     function submitBooking() {
         players.push({ mId: selectedMatchId, p: currentUser, t: document.getElementById('tName').value, u: document.getElementById('uTr').value, status: 'Pending', res: 'TBD', winPrize: '', upi: '' });
         localStorage.setItem('demoPlayers', JSON.stringify(players));
-        alert("Booking Sent!");
-        switchTab('profile');
+        alert("Booking Sent!"); switchTab('profile');
     }
 
     function login() { currentUser = document.getElementById('phone').value; renderPlayerBookings(); }
     function loginAdmin() { if(document.getElementById('adminPass').value === 'demo011') switchTab('admin'); }
+    function logout() { currentUser = null; switchTab('profile'); }
 
     function renderPlayerBookings() {
         document.getElementById('auth-area').style.display = 'none';
@@ -102,11 +123,10 @@
             let m = matches.find(x => x.id === b.mId);
             let status = b.status === 'Confirmed' ? 
                 `<div class="status-card confirmed">✅ Confirmed! 📢 ${m.note} <br><a href="${m.wp}"><button class="btn btn-blue">JOIN WHATSAPP</button></a></div>` :
-                `<div class="status-card pending">⏳ Payment Pending. Admin jaldi hi update karenge, check karte rahiye.</div>`;
+                `<div class="status-card pending">⏳ Admin payment update karenge, check karte rahiye.</div>`;
             
             let winArea = b.res === 'Won' ? 
-                `<div class="status-card confirmed">🏆 Won ₹${b.winPrize}! Enter UPI: <input type="text" id="upi${i}" value="${b.upi}"> <button onclick="saveUPI('${b.t}', ${i})">Save</button></div>` : '';
-            
+                `<div class="status-card confirmed">🏆 Won ₹${b.winPrize}! Enter UPI: <input type="text" id="upi${i}" value="${b.upi||''}"> <button onclick="saveUPI('${b.t}', ${i})">Save</button></div>` : '';
             h += `<div class="card">${m.name} - Team: ${b.t} <br> ${status} ${winArea}</div>`;
         });
         document.getElementById('my-bookings').innerHTML = h;
@@ -114,13 +134,12 @@
 
     function renderAdmin() {
         let h = '';
-        players.forEach((p, i) => h += `<div>${p.t} - ${p.status} <select onchange="updateStat(${i}, this.value)"><option value="Pending">Pending</option><option value="Confirmed">Confirmed</option></select></div>`);
+        players.forEach((p, i) => h += `<div class="card">${p.t} - ${p.status} <select onchange="updateStat(${i}, this.value)"><option value="Pending">Pending</option><option value="Confirmed">Confirmed</option></select></div>`);
         document.getElementById('admin-list').innerHTML = h;
     }
 
     function updateStat(i, val) { players[i].status = val; localStorage.setItem('demoPlayers', JSON.stringify(players)); }
-    function saveUPI(team, i) { players.find(p=>p.t===team).upi = document.getElementById('upi'+i).value; localStorage.setItem('demoPlayers', JSON.stringify(players)); }
-    function addMatch() { matches.push({id:'m'+Date.now(), name:document.getElementById('mName').value, wp:document.getElementById('mWp').value, note:document.getElementById('mNote').value}); localStorage.setItem('demoMatches', JSON.stringify(matches)); }
+    function resetData() { if(confirm("Clear Data?")) { players = []; localStorage.setItem('demoPlayers', JSON.stringify(players)); renderAdmin(); } }
 </script>
 </body>
 </html>
