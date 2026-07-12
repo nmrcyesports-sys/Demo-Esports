@@ -2,375 +2,125 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DEMO ESPORTS | Official App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEMO ESPORTS | Official</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Inter:wght@400;600;700&display=swap');
-
-        :root {
-            --bg-main: #050505; 
-            --bg-card: #0f0f13; 
-            --bg-inner: #1a1a1f;
-            --primary-blue: #2962ff; 
-            --primary-glow: rgba(41, 98, 255, 0.4);
-            --text-main: #ffffff; 
-            --text-muted: #71717a; 
-            --danger: #ef4444; 
-            --success: #10b981;
-            --gold: #fbbf24;
-            --border: #27272a;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); padding-bottom: 90px; }
-        .app-container { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; background: var(--bg-main); }
-        
-        /* Typography */
-        h1, h2, h3 { font-family: 'Teko', sans-serif; margin: 0; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
-        .section-title { font-size: 26px; margin: 25px 20px 15px; }
-        .section-title span { color: var(--primary-blue); }
-
-        /* Utility */
+        :root { --bg: #050505; --card: #101015; --primary: #2962ff; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --text: #ffffff; --muted: #a1a1aa; --border: #27272a; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        .card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin: 15px 20px; }
+        .btn { padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; width: 100%; margin: 5px 0; }
+        .btn-blue { background: var(--primary); color: white; }
+        input { width: 100%; padding: 12px; margin: 5px 0; background: #1a1a1f; border: 1px solid var(--border); color: white; border-radius: 8px; }
+        .status-card { padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 13px; }
+        .pending { background: #3d2b00; border-left: 4px solid var(--warning); }
+        .confirmed { background: #062615; border-left: 4px solid var(--success); }
         .view-section { display: none; }
-        .view-section.active { display: block; padding-bottom: 20px; }
-        .p-20 { padding: 0 20px; }
-
-        /* Header */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(5,5,5,0.9); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
-        .header-logo { display: flex; align-items: center; gap: 10px; font-family: 'Teko', sans-serif; font-size: 24px; font-weight: 700; }
-        .btn-join-now { background: var(--primary-blue); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 12px; box-shadow: 0 0 15px var(--primary-glow); cursor: pointer; }
-
-        /* Home UI Elements */
-        .btn-big-join { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 15px; border-radius: 8px; font-family: 'Teko', sans-serif; font-size: 22px; letter-spacing: 1px; box-shadow: 0 0 20px var(--primary-glow); cursor: pointer; margin-top: 15px; margin-bottom: 25px; }
-        
-        .wide-banner { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
-        .wide-banner img { width: 100%; display: block; object-fit: cover; }
-
-        /* Tournament Card */
-        .tourney-card { background: var(--bg-card); border-radius: 16px; overflow: hidden; margin: 0 20px 20px; border: 1px solid var(--border); }
-        .tourney-img-box { position: relative; width: 100%; height: 180px; background: #111; }
-        .tourney-img-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
-        .tourney-img-box .overlay-title { position: absolute; bottom: 10px; left: 15px; font-size: 28px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
-        
-        .tourney-info { padding: 15px; }
-        .info-row { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
-        .info-row.green { color: var(--success); }
-        
-        .stats-box { background: var(--bg-inner); border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; margin: 15px 0; border: 1px solid var(--border); }
-        .stat-col { text-align: center; display: flex; flex-direction: column; gap: 5px; flex: 1; }
-        .stat-col:not(:last-child) { border-right: 1px solid var(--border); }
-        .stat-label { font-size: 10px; font-weight: 700; color: var(--text-muted); }
-        .stat-val { font-size: 14px; font-weight: 700; font-family: 'Teko', sans-serif; letter-spacing: 1px; }
-
-        .card-footer { display: flex; justify-content: space-between; align-items: center; gap: 15px; }
-        .slots-area { flex: 1; }
-        .slots-text { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; }
-        .progress-bg { width: 100%; height: 6px; background: #222; border-radius: 3px; overflow: hidden; }
-        .progress-fill { width: 100%; height: 100%; background: var(--primary-blue); }
-        .btn-white { background: white; color: black; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; }
-
-        /* Form & Basic Elements */
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-inner); color: white; font-family: inherit; outline: none; }
-        .basic-card { background: var(--bg-card); padding: 15px; border-radius: 12px; margin: 15px 20px; border: 1px solid var(--border); }
-        .btn-normal { background: var(--primary-blue); color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-        .btn-red { background: var(--danger); color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-
-        /* Scrims Grid */
-        .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 20px; }
-        .time-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 15px 5px; text-align: center; cursor: pointer; }
-        .time-card .time { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
-        .time-card .status { font-size: 10px; font-weight: bold; color: var(--success); }
-        .time-card.full { opacity: 0.5; pointer-events: none; }
-        .time-card.full .status { color: var(--danger); }
-        .time-card.selected { border-color: var(--primary-blue); background: rgba(41, 98, 255, 0.1); }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #050505; border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(4, 1fr); padding: 10px 0 15px; z-index: 200; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 4px; cursor: pointer; }
-        .nav-item.active { color: var(--primary-blue); }
-        .nav-icon { font-size: 22px; }
+        .view-section.active { display: block; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    
-    <div class="header">
-        <div class="header-logo">
-            🦅 DEMO ESPORTS
-        </div>
-        <button class="btn-join-now">JOIN NOW</button>
-    </div>
-
+<div id="app" style="max-width: 480px; margin: 0 auto;">
     <div id="view-home" class="view-section active">
-        <div class="p-20">
-            <button class="btn-big-join" onclick="switchTab('scrims')">JOIN BATTLE ⚔️</button>
-            
-            <div class="wide-banner">
-                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=480&h=120&q=80" alt="Hub Banner" style="height: 120px;">
-            </div>
-        </div>
-
-        <h2 class="section-title">LIVE <span>ACTION</span></h2>
-
-        <div class="tourney-card">
-            <div class="tourney-img-box">
-                <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=480&h=200&q=80" alt="Tournament Banner">
-                <h3 class="overlay-title">BETA TEST SPECIAL</h3>
-            </div>
-            
-            <div class="tourney-info">
-                <div class="info-row">📅 2026-02-23</div>
-                <div class="info-row green">🛡️ DEMO ESPORT</div>
-                
-                <div class="stats-box">
-                    <div class="stat-col">
-                        <span class="stat-label">PRIZE</span>
-                        <span class="stat-val" style="color: var(--gold);">₹500</span>
-                    </div>
-                    <div class="stat-col">
-                        <span class="stat-label">MODE</span>
-                        <span class="stat-val">SQUAD</span>
-                    </div>
-                    <div class="stat-col">
-                        <span class="stat-label">ENTRY</span>
-                        <span class="stat-val" style="color: var(--success);">FREE</span>
-                    </div>
-                </div>
-
-                <div class="card-footer">
-                    <div class="slots-area">
-                        <div class="slots-text">
-                            <span>SLOTS</span>
-                            <span style="color: var(--danger);">60/60</span>
-                        </div>
-                        <div class="progress-bg"><div class="progress-fill"></div></div>
-                    </div>
-                    <button class="btn-white" onclick="switchTab('scrims')">JOIN ⚔️</button>
-                </div>
-            </div>
-        </div>
+        <h1 style="text-align: center; margin: 20px;">DEMO ESPORTS</h1>
+        <button class="btn btn-blue" onclick="switchTab('scrims')">JOIN BATTLE ⚔️</button>
+        <div id="matches-list"></div>
     </div>
 
     <div id="view-scrims" class="view-section">
-        <div class="p-20">
-            <h1 style="font-size: 30px; margin-bottom: 20px; text-align: center;">DAILY SCRIMS</h1>
-        </div>
-        
-        <h2 class="section-title" style="font-size: 20px; margin-top: 0;">1. SELECT LOBBY TIME</h2>
-        <div class="time-grid" id="lobby-grid">
-            </div>
-
-        <div id="booking-section" style="display: none;">
-            <h2 class="section-title" style="font-size: 20px;">2. ENTER DETAILS</h2>
-            <div class="basic-card">
-                <div id="selected-lobby-info" style="font-size:12px; color:var(--text-muted); margin-bottom:15px; text-align: center;"></div>
-                <input type="text" id="tName" placeholder="Team Name (e.g. Demo Killers)">
-                <input type="text" id="uTr" placeholder="12-Digit UTR Number" maxlength="12" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-                <button class="btn-normal" onclick="submitBooking()" style="font-size: 20px; font-family: 'Teko', sans-serif; letter-spacing: 1px;">BOOK YOUR SLOT</button>
-            </div>
+        <h2 style="text-align: center; margin: 20px;">DAILY SCRIMS</h2>
+        <div id="lobby-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px;"></div>
+        <div id="booking-area" class="card" style="display:none;">
+            <input type="text" id="tName" placeholder="Team Name">
+            <input type="text" id="uTr" placeholder="12-Digit UTR">
+            <button class="btn btn-blue" onclick="submitBooking()">BOOK SLOT</button>
         </div>
     </div>
 
     <div id="view-profile" class="view-section">
-        
-        <div id="auth-screen">
-            <h2 class="section-title">PLAYER <span>LOGIN</span></h2>
-            <div class="basic-card">
-                <input type="text" id="loginPhone" placeholder="10-Digit Mobile Number" maxlength="10">
-                <button class="btn-normal" onclick="loginPlayer()">LOGIN</button>
-            </div>
-            
-            <h2 class="section-title" style="margin-top: 40px; color: var(--danger);">ADMIN <span>ACCESS</span></h2>
-            <div class="basic-card" style="border-color: rgba(239, 68, 68, 0.3);">
-                <input type="password" id="loginPass" placeholder="Admin Password">
-                <button class="btn-red" onclick="loginAdmin()">UNLOCK DASHBOARD</button>
-            </div>
+        <div id="auth-area" class="card">
+            <input type="text" id="phone" placeholder="Mobile Number">
+            <button class="btn btn-blue" onclick="login()">LOGIN</button>
+            <input type="password" id="adminPass" placeholder="Admin Pass">
+            <button class="btn btn-blue" onclick="loginAdmin()">ADMIN LOGIN</button>
         </div>
-
-        <div id="player-dashboard" style="display: none;">
-            <h2 class="section-title">MY <span>BOOKINGS</span></h2>
-            <div id="player-bookings-list" class="p-20"></div>
-            <div class="p-20"><button class="btn-red" onclick="logout()">LOGOUT</button></div>
+        <div id="player-area" style="display:none;">
+            <div id="my-bookings" style="padding: 20px;"></div>
+            <button class="btn" onclick="logout()">Logout</button>
         </div>
     </div>
 
     <div id="view-admin" class="view-section">
-        <h2 class="section-title" style="color: var(--danger);">ADMIN <span>PANEL</span></h2>
-        
-        <div class="basic-card">
-            <h3 style="margin-bottom: 15px;">➕ CREATE NEW MATCH</h3>
-            <input type="text" id="newMName" placeholder="Time/Name (e.g. 10:20 PM)">
-            <div style="display: flex; gap: 10px;">
-                <input type="number" id="newMFee" placeholder="Entry (₹)">
-                <input type="number" id="newMPrize" placeholder="Prize (₹)">
-            </div>
-            <button class="btn-normal" onclick="addNewMatch()">ADD MATCH</button>
+        <div class="card">
+            <input type="text" id="mName" placeholder="Match Name">
+            <input type="text" id="mWp" placeholder="WhatsApp Link">
+            <input type="text" id="mNote" placeholder="Notice (ID Pass details)">
+            <button class="btn btn-blue" onclick="addMatch()">CREATE LOBBY</button>
         </div>
-
-        <div class="basic-card" style="overflow-x: auto;">
-            <h3 style="margin-bottom: 15px;">📋 REGISTRATIONS</h3>
-            <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; min-width: 400px;">
-                <tbody id="admin-table"></tbody>
-            </table>
-        </div>
-
-        <div class="p-20"><button class="btn-red" onclick="resetData()">🔄 RESET ALL DATA</button></div>
-        <div class="p-20"><button class="btn-white" style="width: 100%;" onclick="logout()">LOGOUT ADMIN</button></div>
+        <div id="admin-list" class="card"></div>
     </div>
-
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
-            <span class="nav-icon">🏠</span><span>Home</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('scrims')" id="nav-scrims">
-            <span class="nav-icon">⚔️</span><span>Scrims</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
-            <span class="nav-icon">👤</span><span>Profile</span>
-        </div>
-    </nav>
 </div>
 
 <script>
-    // --- DATABASE ---
-    let matches = JSON.parse(localStorage.getItem('demoMatches2')) || [];
-    let players = JSON.parse(localStorage.getItem('demoPlayers2')) || [];
-    let currentUser = null; 
-    let isAdmin = false;
-    let selectedMatchId = null;
+    let matches = JSON.parse(localStorage.getItem('demoMatches')) || [];
+    let players = JSON.parse(localStorage.getItem('demoPlayers')) || [];
+    let currentUser = null, isAdmin = false, selectedMatchId = null;
 
-    // --- NAVIGATION ---
-    function switchTab(tabId) {
+    function switchTab(t) {
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        
-        if(tabId === 'profile' && isAdmin) {
-            document.getElementById('view-admin').classList.add('active');
-            document.getElementById('nav-profile').classList.add('active');
-            renderAdmin();
-        } else {
-            document.getElementById('view-' + tabId).classList.add('active');
-            if(document.getElementById('nav-' + tabId)) document.getElementById('nav-' + tabId).classList.add('active');
-            if(tabId === 'scrims') renderLobbyGrid();
-            if(tabId === 'profile') renderProfileState();
-        }
-        window.scrollTo(0,0);
+        document.getElementById('view-'+t).classList.add('active');
+        if(t==='scrims') renderMatches();
+        if(t==='admin') renderAdmin();
     }
 
-    // --- AUTH ---
-    function loginPlayer() {
-        let phone = document.getElementById('loginPhone').value;
-        if(phone.length === 10) { currentUser = phone; isAdmin = false; renderProfileState(); }
-        else alert("Enter 10-digit number.");
-    }
-    function loginAdmin() {
-        if(document.getElementById('loginPass').value === 'demo011') { isAdmin = true; switchTab('profile'); }
-        else alert("Wrong Password!");
-    }
-    function logout() { currentUser = null; isAdmin = false; renderProfileState(); }
-
-    function renderProfileState() {
-        if(currentUser) {
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('player-dashboard').style.display = 'block';
-            renderPlayerBookings();
-        } else {
-            document.getElementById('auth-screen').style.display = 'block';
-            document.getElementById('player-dashboard').style.display = 'none';
-        }
+    function renderMatches() {
+        let h = '';
+        matches.forEach(m => h += `<div class="card" onclick="selectLobby('${m.id}')">${m.name}</div>`);
+        document.getElementById('lobby-grid').innerHTML = h;
     }
 
-    // --- SCRIMS LOGIC ---
-    function renderLobbyGrid() {
-        let gridHTML = '';
-        if(matches.length === 0) gridHTML = `<p style="grid-column: span 3; color: var(--text-muted); text-align: center;">No matches added by admin yet.</p>`;
-        
-        matches.forEach(m => {
-            let count = players.filter(p => p.mId === m.id).length;
-            let isFull = count >= 12;
-            gridHTML += `
-                <div class="time-card ${isFull ? 'full' : ''}" onclick="selectLobby('${m.id}', this)">
-                    <div class="time">${m.name}</div>
-                    <div class="status">${isFull ? 'EXPIRED' : count+'/12 SLOTS'}</div>
-                </div>
-            `;
-        });
-        document.getElementById('lobby-grid').innerHTML = gridHTML;
-        document.getElementById('booking-section').style.display = 'none';
-    }
-
-    function selectLobby(mId, el) {
-        if(el.classList.contains('full')) return;
-        document.querySelectorAll('.time-card').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-        selectedMatchId = mId;
-        let m = matches.find(x => x.id === mId);
-        document.getElementById('selected-lobby-info').innerHTML = `Time: <b>${m.name}</b> | Entry: <b>₹${m.fee}</b> | Prize: <b>₹${m.prize}</b>`;
-        document.getElementById('booking-section').style.display = 'block';
+    function selectLobby(id) {
+        selectedMatchId = id;
+        document.getElementById('booking-area').style.display = 'block';
     }
 
     function submitBooking() {
-        if(!currentUser) return alert("Go to Profile tab and login first!");
-        let tName = document.getElementById('tName').value;
-        let uTr = document.getElementById('uTr').value;
-        if(!tName || uTr.length !== 12) return alert("Fill details correctly!");
-        
-        let count = players.filter(p => p.mId === selectedMatchId).length;
-        if(count >= 12) return alert("Lobby full!");
-
-        players.push({ mId: selectedMatchId, p: currentUser, t: tName, u: uTr, status: 'Pending', slot: count+1 });
-        localStorage.setItem('demoPlayers2', JSON.stringify(players));
+        players.push({ mId: selectedMatchId, p: currentUser, t: document.getElementById('tName').value, u: document.getElementById('uTr').value, status: 'Pending', res: 'TBD', winPrize: '', upi: '' });
+        localStorage.setItem('demoPlayers', JSON.stringify(players));
         alert("Booking Sent!");
-        document.getElementById('tName').value = ''; document.getElementById('uTr').value = '';
         switchTab('profile');
     }
 
-    function renderPlayerBookings() {
-        let mine = players.filter(p => p.p === currentUser);
-        let html = mine.map(b => {
-            let mName = (matches.find(m => m.id === b.mId) || {}).name || 'Unknown';
-            let c = b.status === 'Confirmed' ? 'var(--success)' : (b.status==='Rejected'?'var(--danger)':'#fbbf24');
-            return `<div class="basic-card" style="border-left: 4px solid ${c}">
-                <div style="font-size:16px; font-weight:bold; margin-bottom:5px;">${mName}</div>
-                Team: <b>${b.t}</b> <br> Status: <b style="color:${c}">${b.status}</b>
-            </div>`;
-        }).join('');
-        document.getElementById('player-bookings-list').innerHTML = html || '<p>No bookings yet.</p>';
-    }
+    function login() { currentUser = document.getElementById('phone').value; renderPlayerBookings(); }
+    function loginAdmin() { if(document.getElementById('adminPass').value === 'demo011') switchTab('admin'); }
 
-    // --- ADMIN LOGIC ---
-    function addNewMatch() {
-        let name = document.getElementById('newMName').value;
-        if(!name) return;
-        matches.push({ id: 'm'+Date.now(), name, fee: document.getElementById('newMFee').value, prize: document.getElementById('newMPrize').value });
-        localStorage.setItem('demoMatches2', JSON.stringify(matches));
-        alert("Match Added!"); document.getElementById('newMName').value=''; renderAdmin();
+    function renderPlayerBookings() {
+        document.getElementById('auth-area').style.display = 'none';
+        document.getElementById('player-area').style.display = 'block';
+        let h = '';
+        players.filter(p => p.p === currentUser).forEach((b, i) => {
+            let m = matches.find(x => x.id === b.mId);
+            let status = b.status === 'Confirmed' ? 
+                `<div class="status-card confirmed">✅ Confirmed! 📢 ${m.note} <br><a href="${m.wp}"><button class="btn btn-blue">JOIN WHATSAPP</button></a></div>` :
+                `<div class="status-card pending">⏳ Payment Pending. Admin jaldi hi update karenge, check karte rahiye.</div>`;
+            
+            let winArea = b.res === 'Won' ? 
+                `<div class="status-card confirmed">🏆 Won ₹${b.winPrize}! Enter UPI: <input type="text" id="upi${i}" value="${b.upi}"> <button onclick="saveUPI('${b.t}', ${i})">Save</button></div>` : '';
+            
+            h += `<div class="card">${m.name} - Team: ${b.t} <br> ${status} ${winArea}</div>`;
+        });
+        document.getElementById('my-bookings').innerHTML = h;
     }
 
     function renderAdmin() {
-        document.getElementById('admin-table').innerHTML = `<tr><th style="padding-bottom:10px;">Team</th><th>Status</th></tr>` + 
-        players.map((p,i) => `<tr>
-            <td style="padding: 10px 0; border-bottom: 1px solid #333;">${p.t} <br><span style="color:var(--text-muted)">UTR: ${p.u}</span></td>
-            <td style="padding: 10px 0; border-bottom: 1px solid #333;">
-                <select style="padding:5px; margin:0;" onchange="updateStat(${i}, this.value)">
-                    <option value="Pending" ${p.status==='Pending'?'selected':''}>Pend</option>
-                    <option value="Confirmed" ${p.status==='Confirmed'?'selected':''}>Conf</option>
-                    <option value="Rejected" ${p.status==='Rejected'?'selected':''}>Rej</option>
-                </select>
-            </td>
-        </tr>`).join('');
+        let h = '';
+        players.forEach((p, i) => h += `<div>${p.t} - ${p.status} <select onchange="updateStat(${i}, this.value)"><option value="Pending">Pending</option><option value="Confirmed">Confirmed</option></select></div>`);
+        document.getElementById('admin-list').innerHTML = h;
     }
 
-    function updateStat(i, val) {
-        players[i].status = val;
-        localStorage.setItem('demoPlayers2', JSON.stringify(players));
-    }
-
-    function resetData() {
-        if(confirm("Clear all bookings?")) { players = []; localStorage.setItem('demoPlayers2', JSON.stringify(players)); renderAdmin(); }
-    }
+    function updateStat(i, val) { players[i].status = val; localStorage.setItem('demoPlayers', JSON.stringify(players)); }
+    function saveUPI(team, i) { players.find(p=>p.t===team).upi = document.getElementById('upi'+i).value; localStorage.setItem('demoPlayers', JSON.stringify(players)); }
+    function addMatch() { matches.push({id:'m'+Date.now(), name:document.getElementById('mName').value, wp:document.getElementById('mWp').value, note:document.getElementById('mNote').value}); localStorage.setItem('demoMatches', JSON.stringify(matches)); }
 </script>
-
 </body>
 </html>
