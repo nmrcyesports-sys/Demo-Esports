@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DEMO ESPORTS | Official Portal</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0c; --bg-card: #15151a; --primary: #00ff88; --primary-glow: rgba(0, 255, 136, 0.3);
+            --blue: #00ccff; --text-light: #ffffff; --text-muted: #888899; --danger: #ff3366; --border: #22222a;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-main); color: var(--text-light); margin: 0; padding: 0; padding-bottom: 70px; }
+        
+        .app-container { max-width: 480px; margin: 0 auto; background: var(--bg-main); min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(10, 10, 12, 0.9); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
+        .header h2 { margin: 0; font-size: 18px; font-weight: 800; color: var(--text-light); }
+        .header span { color: var(--primary); }
+        
+        /* Utility Classes */
+        .view-section { display: none; padding: 20px; }
+        .view-section.active { display: block; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); background: #0a0a0c; color: white; font-family: inherit; }
+        button { cursor: pointer; font-weight: bold; border: none; transition: 0.3s; }
+        .btn-primary { background: var(--primary); color: black; box-shadow: 0 4px 15px var(--primary-glow); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-blue { background: var(--blue); color: black; }
+        
+        /* Typography */
+        h1, h3 { color: var(--text-light); text-transform: uppercase; margin-top: 0; }
+        .section-title { font-size: 14px; font-weight: 800; color: var(--text-muted); margin: 20px 0 10px 0; }
+        
+        /* Scrims Time Grid */
+        .time-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .time-btn { background: var(--bg-card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; display: flex; flex-direction: column; gap: 5px; }
+        .time-btn .time { font-size: 16px; font-weight: bold; color: var(--primary); }
+        .time-btn .status { font-size: 11px; font-weight: bold; color: var(--text-muted); }
+        .time-btn.full { opacity: 0.5; pointer-events: none; }
+        .time-btn.full .status { color: var(--danger); }
+        .time-btn.selected { border-color: var(--primary); background: rgba(0, 255, 136, 0.1); }
+
+        /* Booking Card Status */
+        .status-box { margin-top: 10px; padding: 10px; border-radius: 8px; font-size: 12px; }
+        .status-pending { background: rgba(255, 170, 0, 0.1); border-left: 3px solid #ffaa00; }
+        .status-confirmed { background: rgba(0, 255, 136, 0.1); border-left: 3px solid var(--primary); }
+        .status-rejected { background: rgba(255, 51, 102, 0.1); border-left: 3px solid var(--danger); }
+        
+        /* Admin Tables */
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 400px; }
+        th { background: rgba(255,255,255,0.05); padding: 8px; text-align: left; }
+        td { padding: 8px; border-bottom: 1px solid var(--border); }
+        
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: rgba(10, 10, 12, 0.95); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; backdrop-filter: blur(10px); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 10px; cursor: pointer; transition: 0.2s; }
+        .nav-item.active { color: var(--primary); }
+        .nav-icon { font-size: 20px; margin-bottom: 2px; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: var(--bg-card); width: 100%; max-width: 400px; padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <header class="header">
+        <h2>DEMO <span>ESPORTS</span></h2>
+        <div style="font-size: 12px; color: var(--text-muted);" id="live-clock">00:00:00</div>
+    </header>
+
+    <div id="view-home" class="view-section active">
+        <div style="background: linear-gradient(45deg, #0f172a, #1e293b); padding: 25px 20px; border-radius: 12px; text-align: center; border: 1px solid var(--border); margin-bottom: 20px;">
+            <h3 style="color: var(--primary); margin: 0 0 5px 0;">BETA TEST LIVE</h3>
+            <h2 style="margin: 0; font-size: 22px;">DAILY SCRIMS HUB</h2>
+            <p style="font-size: 12px; color: var(--text-muted);">Register your squad for intense lobbies.</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+            <div class="card" style="text-align: center; padding: 10px;">
+                <h4 style="margin: 0; color: var(--primary);">Anti-Cheat</h4><p style="margin: 2px 0 0; font-size: 10px; color: var(--text-muted);">Strict Policy</p>
+            </div>
+            <div class="card" style="text-align: center; padding: 10px;">
+                <h4 style="margin: 0; color: var(--blue);">Instant Pay</h4><p style="margin: 2px 0 0; font-size: 10px; color: var(--text-muted);">UPI Withdrawals</p>
+            </div>
+            <div class="card" style="text-align: center; padding: 10px;">
+                <h4 style="margin: 0; color: var(--danger);">12 Slots</h4><p style="margin: 2px 0 0; font-size: 10px; color: var(--text-muted);">Exclusive Lobbies</p>
+            </div>
+        </div>
+        <button class="btn-primary" onclick="switchTab('scrims')">JOIN BATTLE ⚔️</button>
+    </div>
+
+    <div id="view-scrims" class="view-section">
+        <h1 style="text-align:center; font-size:20px;">DAILY SCRIMS</h1>
+        <p style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:-10px;">Select a lobby to book your slot</p>
+        
+        <div class="section-title">1. SELECT LOBBY</div>
+        <div class="time-grid" id="lobby-grid">
+            </div>
+
+        <div id="booking-section" style="display: none; margin-top: 20px;">
+            <div class="section-title">2. ENTER DETAILS</div>
+            <div class="card">
+                <div id="selected-lobby-info" style="font-size:13px; color:var(--text-muted); margin-bottom:15px;"></div>
+                <input type="text" id="tName" placeholder="Team Name (e.g. Demo Killers)">
+                <input type="text" id="uTr" placeholder="12-Digit UTR Number" maxlength="12" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                <button class="btn-primary" onclick="submitBooking()">CONFIRM BOOKING</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-profile" class="view-section">
+        <div id="auth-screen">
+            <h1 style="text-align:center; font-size:20px;">PLAYER LOGIN</h1>
+            <div class="card">
+                <input type="text" id="loginPhone" placeholder="Enter 10-Digit Mobile Number" maxlength="10">
+                <button class="btn-primary" onclick="loginPlayer()">LOGIN</button>
+            </div>
+            
+            <div class="section-title" style="text-align:center;">OR</div>
+            
+            <div class="card" style="border-color: var(--danger);">
+                <h3 style="color:var(--danger); font-size:14px;">ADMIN ACCESS</h3>
+                <input type="password" id="loginPass" placeholder="Admin Password">
+                <button class="btn-danger" onclick="loginAdmin()">LOGIN ADMIN</button>
+            </div>
+        </div>
+
+        <div id="player-dashboard" style="display: none;">
+            <h3>MY BOOKINGS</h3>
+            <div id="player-bookings-list"></div>
+            <button style="background:transparent; border:1px solid var(--border); color:white; margin-top:20px;" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div id="view-admin" class="view-section">
+        <h1 style="color:var(--danger); text-align:center;">ADMIN PANEL</h1>
+        
+        <div class="card" style="border-color: var(--blue);">
+            <h3 style="color:var(--blue); font-size:14px;">➕ ADD NEW MATCH</h3>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="newMName" placeholder="Lobby Name (e.g. 9 PM Scrims)">
+                <input type="number" id="newMFee" placeholder="Entry (₹)">
+                <input type="number" id="newMPrize" placeholder="Prize (₹)">
+            </div>
+            <input type="text" id="newMNotice" placeholder="Notice (e.g. ID Pass at 8:50 PM)">
+            <input type="text" id="newMWpLink" placeholder="WhatsApp Link">
+            <button class="btn-blue" onclick="addNewMatch()">CREATE LOBBY</button>
+        </div>
+
+        <div class="card table-responsive">
+            <h3 style="font-size:14px;">📋 APPROVALS & STATUS</h3>
+            <table id="admin-approvals-table"></table>
+        </div>
+
+        <div class="card table-responsive">
+            <h3 style="font-size:14px;">🏆 UPDATE RESULTS</h3>
+            <table id="admin-results-table"></table>
+        </div>
+
+        <div class="card" style="border-color: var(--danger); margin-top:30px;">
+            <p style="font-size:11px; color:var(--text-muted); text-align:center;">Reset data for the next day's tournament.</p>
+            <button class="btn-danger" onclick="resetData()">🔄 RESET ALL PLAYERS</button>
+        </div>
+        <button style="background:transparent; border:1px solid var(--border); color:white;" onclick="logout()">Logout Admin</button>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
+            <span class="nav-icon">🏠</span><span>Home</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('scrims')" id="nav-scrims">
+            <span class="nav-icon">⚔️</span><span>Scrims</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
+            <span class="nav-icon">👤</span><span>Profile</span>
+        </div>
+    </nav>
+</div>
+
+<script>
+    // --- DATABASE (LocalStorage) ---
+    // Changed keys to demoMatches and demoPlayers
+    let matches = JSON.parse(localStorage.getItem('demoMatches')) || [];
+    let players = JSON.parse(localStorage.getItem('demoPlayers')) || [];
+    let currentUser = null; 
+    let isAdmin = false;
+    let selectedMatchId = null;
+
+    // --- UTILS ---
+    setInterval(() => {
+        document.getElementById('live-clock').innerText = new Date().toLocaleTimeString('en-US');
+    }, 1000);
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        
+        if(tabId === 'profile' && isAdmin) {
+            document.getElementById('view-admin').classList.add('active');
+            document.getElementById('nav-profile').classList.add('active');
+            renderAdmin();
+        } else {
+            document.getElementById('view-' + tabId).classList.add('active');
+            document.getElementById('nav-' + tabId).classList.add('active');
+            if(tabId === 'scrims') renderLobbyGrid();
+            if(tabId === 'profile') renderProfileState();
+        }
+    }
+
+    // --- AUTHENTICATION ---
+    function loginPlayer() {
+        let phone = document.getElementById('loginPhone').value;
+        if(phone.length === 10) { currentUser = phone; isAdmin = false; renderProfileState(); }
+        else alert("Enter valid 10-digit number.");
+    }
+    function loginAdmin() {
+        // Changed admin password to demo011
+        if(document.getElementById('loginPass').value === 'demo011') { isAdmin = true; switchTab('profile'); }
+        else alert("Wrong Password!");
+    }
+    function logout() { currentUser = null; isAdmin = false; renderProfileState(); }
+
+    function renderProfileState() {
+        if(currentUser) {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('player-dashboard').style.display = 'block';
+            renderPlayerBookings();
+        } else {
+            document.getElementById('auth-screen').style.display = 'block';
+            document.getElementById('player-dashboard').style.display = 'none';
+        }
+    }
+
+    // --- SCRIMS / BOOKING LOGIC ---
+    function renderLobbyGrid() {
+        let gridHTML = '';
+        if(matches.length === 0) gridHTML = `<p style="color:var(--text-muted); grid-column:span 2;">No lobbies scheduled today.</p>`;
+        
+        matches.forEach(m => {
+            let bookedCount = players.filter(p => p.mId === m.id).length;
+            let isFull = bookedCount >= 12;
+            gridHTML += `
+                <div class="time-btn ${isFull ? 'full' : ''}" id="btn-${m.id}" onclick="selectLobby('${m.id}', this)">
+                    <span class="time">${m.name}</span>
+                    <span class="status">${isFull ? 'SLOTS FULL' : bookedCount+'/12 BOOKED'}</span>
+                </div>
+            `;
+        });
+        document.getElementById('lobby-grid').innerHTML = gridHTML;
+        document.getElementById('booking-section').style.display = 'none';
+        selectedMatchId = null;
+    }
+
+    function selectLobby(mId, element) {
+        if(element.classList.contains('full')) return;
+        document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+        element.classList.add('selected');
+        
+        selectedMatchId = mId;
+        let mData = matches.find(m => m.id === mId);
+        
+        document.getElementById('selected-lobby-info').innerHTML = `
+            Selected: <b style="color:white;">${mData.name}</b><br>
+            Entry Fee: <b style="color:var(--primary);">₹${mData.fee}</b> | Prize: <b style="color:var(--primary);">₹${mData.prize}</b>
+        `;
+        document.getElementById('booking-section').style.display = 'block';
+    }
+
+    function submitBooking() {
+        if(!currentUser) { alert("Please login from Profile tab first!"); return switchTab('profile'); }
+        let tName = document.getElementById('tName').value;
+        let uTr = document.getElementById('uTr').value;
+        
+        if(!tName) return alert("Enter Team Name");
+        if(uTr.length !== 12) return alert("Enter 12-Digit UTR");
+        
+        let bookedCount = players.filter(p => p.mId === selectedMatchId).length;
+        if(bookedCount >= 12) return alert("Lobby is full!");
+
+        players.push({
+            mId: selectedMatchId, p: currentUser, t: tName, u: uTr, 
+            status: 'Pending', slot: bookedCount + 1, pos: '', kill: '', winPrize: '', mRes: 'TBD', upi: ''
+        });
+        localStorage.setItem('demoPlayers', JSON.stringify(players));
+        
+        alert("Booking Sent! Admin will confirm shortly.");
+        document.getElementById('tName').value = '';
+        document.getElementById('uTr').value = '';
+        switchTab('profile');
+    }
+
+    // --- PLAYER DASHBOARD ---
+    function renderPlayerBookings() {
+        let myBookings = players.filter(p => p.p === currentUser);
+        let html = myBookings.length ? myBookings.map((b, i) => {
+            let mData = matches.find(m => m.id === b.mId) || {};
+            let statusHTML = '';
+            
+            if(b.status === 'Confirmed') {
+                statusHTML = `<div class="status-box status-confirmed">
+                    <b style="color:var(--primary);">✅ Confirmed (Slot #${b.slot})</b><br>
+                    <span>📢 ${mData.notice || 'Wait for ID/Pass'}</span><br>
+                    <a href="${mData.wpLink || '#'}" target="_blank"><button class="btn-primary" style="padding:6px; font-size:11px; margin-top:8px;">JOIN WHATSAPP</button></a>
+                </div>`;
+            } else if(b.status === 'Rejected') {
+                statusHTML = `<div class="status-box status-rejected"><b style="color:var(--danger);">❌ Rejected (Invalid UTR)</b></div>`;
+            } else {
+                statusHTML = `<div class="status-box status-pending"><b style="color:#ffaa00;">⏳ Pending Approval</b><br><span>Admin will update status soon. Check back here.</span></div>`;
+            }
+
+            let claimHTML = b.winPrize ? `
+                <div class="status-box status-confirmed" style="margin-top:5px;">
+                    <b style="color:var(--primary);">🏆 Won ₹${b.winPrize}</b>
+                    <input type="text" id="upi${i}" value="${b.upi||''}" placeholder="Enter UPI ID" style="padding:6px; margin:5px 0;">
+                    <button class="btn-primary" style="padding:6px;" onclick="saveUPI('${b.t}', ${i})">Claim</button>
+                </div>` : '';
+
+            let resTag = b.mRes !== 'TBD' ? ` | Res: <span style="color:${b.mRes==='Won'?'#00ff88':'#ff3366'}">${b.mRes}</span>` : '';
+
+            return `
+            <div class="card">
+                <b style="color:var(--blue);">${mData.name || 'Deleted Lobby'}</b><br>
+                <span style="font-size:12px;"><b>${b.t}</b> | Pos: ${b.pos||'-'} | Kills: ${b.kill||'-'}${resTag}</span>
+                ${statusHTML}
+                ${claimHTML}
+            </div>`;
+        }).join('') : '<p style="color:var(--text-muted); font-size:12px;">No bookings found.</p>';
+        
+        document.getElementById('player-bookings-list').innerHTML = html;
+    }
+
+    function saveUPI(team, index) {
+        let upiVal = document.getElementById('upi'+index).value;
+        let pIndex = players.findIndex(p => p.p === currentUser && p.t === team);
+        if(pIndex > -1) { players[pIndex].upi = upiVal; localStorage.setItem('demoPlayers', JSON.stringify(players)); alert("UPI Saved!"); }
+    }
+
+    // --- ADMIN DASHBOARD ---
+    function renderAdmin() {
+        // Approvals Table
+        document.getElementById('admin-approvals-table').innerHTML = `<tr><th>Slot</th><th>Lobby</th><th>Team</th><th>UTR</th><th>Action</th></tr>` + 
+        players.map((p, i) => {
+            let mName = (matches.find(m => m.id === p.mId) || {}).name || '-';
+            let c = p.status === 'Confirmed' ? '#00ff88' : (p.status === 'Rejected' ? '#ff3366' : '#ffaa00');
+            let s = p.status === 'Confirmed' ? p.slot : '⏳';
+            return `<tr>
+                <td>#${s}</td><td>${mName}</td><td>${p.t}</td><td>${p.u}</td>
+                <td><select style="background:#0a0a0c; color:${c}; border:1px solid ${c}; padding:4px;" onchange="updateAStat(${i}, this.value)">
+                    <option value="Pending" ${p.status==='Pending'?'selected':''}>Pend</option>
+                    <option value="Confirmed" ${p.status==='Confirmed'?'selected':''}>Conf</option>
+                    <option value="Rejected" ${p.status==='Rejected'?'selected':''}>Rej</option>
+                </select></td>
+            </tr>`;
+        }).join('');
+
+        // Results Table
+        document.getElementById('admin-results-table').innerHTML = `<tr><th>Team</th><th>Res</th><th>Pos</th><th>Kill</th><th>Prize</th><th>UPI</th><th></th></tr>` + 
+        players.map((p, i) => `<tr>
+            <td>${p.t}</td>
+            <td><select id="aRes${i}" style="padding:4px;"><option value="TBD" ${p.mRes==='TBD'?'selected':''}>-</option><option value="Won" ${p.mRes==='Won'?'selected':''}>W</option><option value="Lost" ${p.mRes==='Lost'?'selected':''}>L</option></select></td>
+            <td><input style="padding:4px;" id="aPos${i}" value="${p.pos||''}"></td>
+            <td><input style="padding:4px;" id="aKill${i}" value="${p.kill||''}"></td>
+            <td><input style="padding:4px;" id="aPrz${i}" value="${p.winPrize||''}"></td>
+            <td>${p.upi||'-'}</td>
+            <td><button class="btn-primary" style="padding:4px;" onclick="saveARes(${i})">✔</button></td>
+        </tr>`).join('');
+    }
+
+    function addNewMatch() {
+        let name = document.getElementById('newMName').value;
+        if(!name) return alert("Enter Name!");
+        matches.push({
+            id: 'm'+Date.now(), name, fee: document.getElementById('newMFee').value,
+            prize: document.getElementById('newMPrize').value, notice: document.getElementById('newMNotice').value, wpLink: document.getElementById('newMWpLink').value
+        });
+        localStorage.setItem('demoMatches', JSON.stringify(matches));
+        alert("Lobby Created!");
+        document.getElementById('newMName').value='';
+        renderAdmin();
+    }
+
+    function updateAStat(i, val) { players[i].status = val; localStorage.setItem('demoPlayers', JSON.stringify(players)); renderAdmin(); }
+    
+    function saveARes(i) {
+        players[i].mRes = document.getElementById('aRes'+i).value;
+        players[i].pos = document.getElementById('aPos'+i).value;
+        players[i].kill = document.getElementById('aKill'+i).value;
+        players[i].winPrize = document.getElementById('aPrz'+i).value;
+        localStorage.setItem('demoPlayers', JSON.stringify(players));
+        alert("Result Saved!"); renderAdmin();
+    }
+
+    function resetData() {
+        if(confirm("Delete ALL players for next tournament?")) {
+            players = []; localStorage.setItem('demoPlayers', JSON.stringify(players));
+            alert("Reset Done!"); renderAdmin();
+        }
+    }
+</script>
+
+</body>
+</html>
