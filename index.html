@@ -37,10 +37,8 @@
         .confirmed { background: rgba(16, 185, 129, 0.1); border-left: 3px solid var(--success); }
         .rejected { background: rgba(239, 68, 68, 0.1); border-left: 3px solid var(--danger); }
         
-        /* Slot Badge for Player Dashboard */
         .slot-badge { position: absolute; top: 15px; right: 15px; background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; box-shadow: 0 4px 10px var(--primary-glow); }
 
-        /* Scrims Grid */
         .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 20px; }
         .time-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 15px 5px; text-align: center; cursor: pointer; }
         .time-card .time { font-size: 16px; font-weight: bold; margin-bottom: 5px; font-family: 'Teko', sans-serif; letter-spacing: 1px; }
@@ -51,7 +49,6 @@
         
         .payment-box { background: rgba(41, 98, 255, 0.1); border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 13px; }
 
-        /* Tournament Card UI */
         .t-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; margin: 15px 20px; overflow: hidden; }
         .t-img-box { height: 160px; position: relative; background: #222; }
         .t-img-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -71,7 +68,6 @@
         .t-p-fill { height: 100%; background: var(--primary); }
         .btn-join-white { background: white; color: black; border-radius: 8px; padding: 10px 20px; font-weight: 800; border: none; cursor: pointer; }
 
-        /* Rankings UI */
         .rank-tabs { display: flex; background: var(--card); margin: 0 20px 15px; border-radius: 8px; padding: 5px; }
         .r-tab { flex: 1; text-align: center; padding: 8px; font-size: 12px; font-weight: bold; color: var(--muted); border-radius: 6px; cursor: pointer; }
         .r-tab.active { background: var(--primary); color: white; }
@@ -87,14 +83,12 @@
         .rank-pts span { font-size: 10px; font-weight: 600; display: block; margin-top: -5px; color: var(--muted); }
         .rank-1 .rank-pts span { color: rgba(255,255,255,0.8); }
 
-        /* Admin Tables */
         .table-responsive { overflow-x: auto; margin: 0 -15px; padding: 0 15px; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 600px; }
         th { padding: 10px 5px; text-align: left; color: var(--muted); border-bottom: 1px solid var(--border); }
         td { padding: 10px 5px; border-bottom: 1px solid var(--border); }
         .td-input { padding: 6px; margin: 0; font-size: 11px; }
         
-        /* 5-Item Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #050505; border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(5, 1fr); padding: 12px 0; z-index: 200; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--muted); font-size: 10px; font-weight: 600; gap: 4px; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
@@ -110,6 +104,7 @@
         <div style="font-size: 12px; color: var(--muted);" id="live-clock">00:00</div>
     </div>
 
+    <!-- 1. HOME VIEW -->
     <div id="view-home" class="view-section active">
         <div style="padding: 20px;">
             <div style="width: 100%; height: 120px; background: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=480&h=120&q=80') center/cover; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border);"></div>
@@ -123,11 +118,13 @@
         </div>
     </div>
 
+    <!-- 2. TOURNAMENTS VIEW -->
     <div id="view-tours" class="view-section">
         <h2 class="section-title">LIVE <span>ACTION</span></h2>
         <div id="tourneys-list"></div>
     </div>
 
+    <!-- 3. RANKINGS VIEW -->
     <div id="view-rankings" class="view-section">
         <h2 class="section-title" style="text-align: center;">DEMO <span>RANKINGS</span></h2>
         <div class="rank-tabs">
@@ -138,6 +135,7 @@
         <div id="rankings-list"></div>
     </div>
 
+    <!-- 4. SCRIMS VIEW -->
     <div id="view-scrims" class="view-section">
         <h2 class="section-title" style="text-align: center;">DAILY <span>SCRIMS</span></h2>
         <div style="font-size: 14px; font-weight: bold; margin: 20px 20px 10px; color: var(--muted);">1. SELECT LOBBY</div>
@@ -153,6 +151,7 @@
         </div>
     </div>
 
+    <!-- 5. PROFILE / LOGIN VIEW -->
     <div id="view-profile" class="view-section">
         <div id="auth-screen">
             <h2 class="section-title">PLAYER <span>LOGIN</span></h2>
@@ -173,9 +172,11 @@
         </div>
     </div>
 
+    <!-- 6. ADMIN DASHBOARD -->
     <div id="view-admin" class="view-section">
         <h2 class="section-title" style="color: var(--danger);">ADMIN <span>PANEL</span></h2>
         
+        <!-- Add Tournament -->
         <div class="card" style="border-color: var(--warning);">
             <h3 style="margin-bottom: 10px; font-size: 18px; color: var(--warning);">⭐ CREATE BIG TOURNAMENT</h3>
             <input type="text" id="nTName" placeholder="Tournament Name (e.g. BETA TEST)">
@@ -192,15 +193,23 @@
             <button class="btn" style="background: var(--warning); color: black; margin-top: 10px;" onclick="addTourney()">ADD TOURNAMENT</button>
         </div>
 
+        <!-- Add Match (Scrims) -->
         <div class="card">
             <h3 style="margin-bottom: 10px; font-size: 18px;">➕ CREATE SCRIM LOBBY</h3>
-            <input type="text" id="newMName" placeholder="Lobby Name/Time (e.g. 10:20 PM Scrims)">
+            <input type="text" id="newMName" placeholder="Lobby Name/Time (e.g. 10:20 PM)">
             <div style="display: flex; gap: 10px;">
                 <input type="number" id="newMFee" placeholder="Entry Fee (₹)">
                 <input type="number" id="newMPrize" placeholder="Prize Pool (₹)">
             </div>
             <input type="text" id="newMWpLink" placeholder="WhatsApp Group Link">
+            <input type="text" id="newMNotice" placeholder="Confirmation Notice (e.g. ID Pass sent at 10 PM)">
             <button class="btn btn-blue" onclick="addNewMatch()" style="margin-top: 10px;">ADD LOBBY</button>
+        </div>
+        
+        <!-- Manage Scrim Lobbies (NEW FEATURE) -->
+        <div class="card" style="border-color: var(--primary);">
+            <h3 style="margin-bottom: 10px; font-size: 18px; color: var(--primary);">⚙️ MANAGE SCRIM LOBBIES</h3>
+            <div id="admin-matches-list"></div>
         </div>
 
         <div class="card">
@@ -236,6 +245,7 @@
         <div style="padding: 0 20px;"><button class="btn" style="background: transparent; border: 1px solid var(--border); color: white;" onclick="logout()">LOGOUT ADMIN</button></div>
     </div>
 
+    <!-- Bottom Nav -->
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('home')" id="nav-home"><span class="nav-icon">🏠</span><span>Home</span></div>
         <div class="nav-item" onclick="switchTab('tours')" id="nav-tours"><span class="nav-icon">🏆</span><span>Tourns</span></div>
@@ -246,11 +256,11 @@
 </div>
 
 <script>
-    // --- DATABASE (V6) ---
-    let matches = JSON.parse(localStorage.getItem('demoMatches_v6')) || [];
-    let players = JSON.parse(localStorage.getItem('demoPlayers_v6')) || [];
-    let rankLogs = JSON.parse(localStorage.getItem('demoRankLogs_v6')) || []; // NEW: Time-based rank logs
-    let tourneys = JSON.parse(localStorage.getItem('demoTourneys_v6')) || [];
+    // --- DATABASE (V7) ---
+    let matches = JSON.parse(localStorage.getItem('demoMatches_v7')) || [];
+    let players = JSON.parse(localStorage.getItem('demoPlayers_v7')) || [];
+    let rankLogs = JSON.parse(localStorage.getItem('demoRankLogs_v7')) || []; 
+    let tourneys = JSON.parse(localStorage.getItem('demoTourneys_v7')) || [];
     
     let currentUser = null, isAdmin = false, selectedMatchId = null;
     const MY_UPI_ID = "6200871886@axl"; 
@@ -388,7 +398,7 @@
             status: 'Pending', slot: bookedCount + 1, pos: '', kill: '', winPrize: '', mRes: 'TBD', upi: '',
             pStat: 'Pending', wNote: '', logId: null
         });
-        localStorage.setItem('demoPlayers_v6', JSON.stringify(players));
+        localStorage.setItem('demoPlayers_v7', JSON.stringify(players));
         
         alert("✅ Booking Sent! Admin will confirm your slot shortly.");
         document.getElementById('tName').value = ''; document.getElementById('uTr').value = '';
@@ -404,15 +414,13 @@
         else {
             html = myBookings.map((b, i) => {
                 let mData = matches.find(m => m.id === b.mId) || {};
-                
-                let statusHTML = '';
-                // SLOT BADGE HTML
                 let slotBadge = b.status === 'Confirmed' ? `<div class="slot-badge">Slot #${b.slot}</div>` : '';
 
+                let statusHTML = '';
                 if(b.status === 'Confirmed') {
                     statusHTML = `<div class="status-box confirmed">
-                        <b style="color:var(--success);">✅ Slot #${b.slot} Confirmed!</b><br>
-                        <span style="color:#ddd;">📢 Admin will update ID/Pass on WhatsApp.</span><br>
+                        <b style="color:var(--success);">✅ Confirmed!</b><br>
+                        <span style="color:#ddd;">📢 ${mData.notice || 'Admin will update ID/Pass on WhatsApp.'}</span><br>
                         <button class="btn btn-blue" style="padding:8px; font-size:11px; margin-top:10px;" onclick="window.open('${mData.wpLink || '#'}', '_blank')">JOIN WHATSAPP FOR ID/PASS</button>
                     </div>`;
                 } else if(b.status === 'Rejected') {
@@ -465,12 +473,12 @@
         let pIdx = players.findIndex(p => p.p === currentUser && p.t === team);
         if(pIdx > -1) {
             players[pIdx].upi = upiVal;
-            localStorage.setItem('demoPlayers_v6', JSON.stringify(players));
+            localStorage.setItem('demoPlayers_v7', JSON.stringify(players));
             alert("✅ UPI ID Saved!"); renderPlayerBookings();
         }
     }
 
-    // --- TIME-BASED RANKINGS LOGIC (NEW) ---
+    // --- TIME-BASED RANKINGS LOGIC ---
     function renderRankings(timeframe) {
         document.querySelectorAll('.r-tab').forEach(t => t.classList.remove('active'));
         document.getElementById('tab-' + timeframe).classList.add('active');
@@ -517,22 +525,16 @@
         let name = document.getElementById('nTName').value;
         if(!name) return alert("Enter Tournament Name!");
         tourneys.push({
-            id: 't'+Date.now(), name: name,
-            img: document.getElementById('nTImg').value,
-            prize: document.getElementById('nTPrize').value || 'TBA',
-            entry: document.getElementById('nTEntry').value || 'FREE',
-            date: document.getElementById('nTDate').value || 'Coming Soon',
-            slots: parseInt(document.getElementById('nTSlots').value) || 60,
-            booked: 0,
-            wp: document.getElementById('nTWp').value || '#'
+            id: 't'+Date.now(), name: name, img: document.getElementById('nTImg').value,
+            prize: document.getElementById('nTPrize').value || 'TBA', entry: document.getElementById('nTEntry').value || 'FREE',
+            date: document.getElementById('nTDate').value || 'Coming Soon', slots: parseInt(document.getElementById('nTSlots').value) || 60,
+            booked: 0, wp: document.getElementById('nTWp').value || '#'
         });
-        localStorage.setItem('demoTourneys_v6', JSON.stringify(tourneys));
+        localStorage.setItem('demoTourneys_v7', JSON.stringify(tourneys));
         alert("✅ Tournament Added!"); renderAdmin();
     }
     
-    function delTourney(idx) {
-        tourneys.splice(idx, 1); localStorage.setItem('demoTourneys_v6', JSON.stringify(tourneys)); renderAdmin();
-    }
+    function delTourney(idx) { tourneys.splice(idx, 1); localStorage.setItem('demoTourneys_v7', JSON.stringify(tourneys)); renderAdmin(); }
 
     function addNewMatch() {
         let name = document.getElementById('newMName').value;
@@ -541,13 +543,51 @@
             id: 'm' + Date.now(), name, 
             fee: document.getElementById('newMFee').value, 
             prize: document.getElementById('newMPrize').value, 
-            wpLink: document.getElementById('newMWpLink').value 
+            wpLink: document.getElementById('newMWpLink').value,
+            notice: document.getElementById('newMNotice').value || 'ID Pass will be shared on WhatsApp.'
         });
-        localStorage.setItem('demoMatches_v6', JSON.stringify(matches));
-        alert("✅ New Match Added!"); document.getElementById('newMName').value = ''; renderAdmin();
+        localStorage.setItem('demoMatches_v7', JSON.stringify(matches));
+        alert("✅ New Scrim Lobby Added!"); 
+        document.getElementById('newMName').value = ''; document.getElementById('newMNotice').value = '';
+        renderAdmin();
+    }
+
+    // Scrims Management (Delete & Notice Edit)
+    function delMatch(mId) {
+        if(confirm("Are you sure you want to delete this lobby?")) {
+            matches = matches.filter(m => m.id !== mId);
+            localStorage.setItem('demoMatches_v7', JSON.stringify(matches));
+            renderAdmin();
+        }
+    }
+
+    function updateMatchNotice(mId) {
+        let newNotice = document.getElementById('mNot'+mId).value;
+        let idx = matches.findIndex(m => m.id === mId);
+        if(idx > -1) {
+            matches[idx].notice = newNotice;
+            localStorage.setItem('demoMatches_v7', JSON.stringify(matches));
+            alert("✅ Notice Updated! Confirmed players will see this immediately.");
+        }
     }
 
     function renderAdmin() {
+        // Manage Scrims Table (NEW)
+        let mhtml = '';
+        matches.forEach((m, i) => {
+            mhtml += `<div style="border-bottom:1px solid #333; padding:10px 0;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px; align-items:center;">
+                    <b style="color:white; font-size:14px;">${m.name}</b>
+                    <button class="btn btn-red" style="width:auto; padding:4px 10px; font-size:10px;" onclick="delMatch('${m.id}')">Delete Lobby</button>
+                </div>
+                <div style="display:flex; gap:5px;">
+                    <input type="text" id="mNot${m.id}" value="${m.notice || ''}" placeholder="Enter Notice (e.g., ID Pass at 10 PM)" style="font-size:11px; padding:8px; margin:0; flex:1;">
+                    <button class="btn btn-blue" style="width:auto; padding:8px 10px; font-size:10px;" onclick="updateMatchNotice('${m.id}')">Save Notice</button>
+                </div>
+            </div>`;
+        });
+        document.getElementById('admin-matches-list').innerHTML = mhtml || '<p style="font-size:12px; color:gray;">No Scrims added.</p>';
+
         // Tournaments Table
         let thtml = '';
         tourneys.forEach((t, i) => {
@@ -588,7 +628,7 @@
             <td><button class="btn btn-blue" style="padding:6px; width:auto;" onclick="saveResult(${i})">✔</button></td>
         </tr>`).join('');
 
-        // Rankings Admin Table (Aggregated All Time)
+        // Rankings Admin Table
         let agg = {};
         rankLogs.forEach(log => {
             let tName = log.t.toUpperCase();
@@ -607,11 +647,11 @@
         </tr>`).join('');
     }
 
-    function updateStatus(i, val) { players[i].status = val; localStorage.setItem('demoPlayers_v6', JSON.stringify(players)); renderAdmin(); }
+    function updateStatus(i, val) { players[i].status = val; localStorage.setItem('demoPlayers_v7', JSON.stringify(players)); renderAdmin(); }
 
     function saveResult(i) {
         players[i].mRes = document.getElementById('mRes'+i).value;
-        players[i].kill = document.getElementById('kill'+i).value;
+     players[i].kill = document.getElementById('kill'+i).value;
         players[i].winPrize = document.getElementById('prz'+i).value;
         players[i].pStat = document.getElementById('pStat'+i).value;
         players[i].wNote = document.getElementById('wNote'+i).value;
@@ -620,24 +660,22 @@
         let res = players[i].mRes;
         let kills = parseInt(players[i].kill) || 0;
 
-        // Auto-update Time-Based Leaderboard ONLY IF NOT ALREADY SAVED THIS RESULT
         if(!players[i].logId && (res === 'Won' || kills > 0)) {
             let pts = (kills * 10) + (res === 'Won' ? 100 : 0); 
             let newLogId = 'r' + Date.now();
             rankLogs.push({ id: newLogId, t: tName, k: kills, w: (res==='Won'?1:0), p: pts, ts: Date.now() });
-            localStorage.setItem('demoRankLogs_v6', JSON.stringify(rankLogs));
-            players[i].logId = newLogId; // Marking as saved
+            localStorage.setItem('demoRankLogs_v7', JSON.stringify(rankLogs));
+            players[i].logId = newLogId; 
         } else if (players[i].logId) {
-            // Update existing log if admin changes kills/wins
             let logIndex = rankLogs.findIndex(l => l.id === players[i].logId);
             if(logIndex > -1) {
                 rankLogs[logIndex].k = kills;
                 rankLogs[logIndex].w = (res==='Won'?1:0);
                 rankLogs[logIndex].p = (kills * 10) + (res === 'Won' ? 100 : 0);
-                localStorage.setItem('demoRankLogs_v6', JSON.stringify(rankLogs));
+                localStorage.setItem('demoRankLogs_v7', JSON.stringify(rankLogs));
             }
         }
-        localStorage.setItem('demoPlayers_v6', JSON.stringify(players));
+        localStorage.setItem('demoPlayers_v7', JSON.stringify(players));
         alert("✅ Result & Ranking Updated!"); renderAdmin();
     }
 
@@ -647,16 +685,14 @@
         let newK = parseInt(document.getElementById('rk'+i).value) || 0;
         let newW = parseInt(document.getElementById('rw'+i).value) || 0;
         let newP = parseInt(document.getElementById('rp'+i).value) || 0;
-
-        rankLogs = rankLogs.filter(log => log.t.toUpperCase() !== oldTeamName.toUpperCase()); // Clear old logs
-        rankLogs.push({ id: 'r'+Date.now(), t: newT, k: newK, w: newW, p: newP, ts: Date.now() }); // Insert fresh log
-        localStorage.setItem('demoRankLogs_v6', JSON.stringify(rankLogs)); 
-        alert("Saved!"); renderAdmin();
+        rankLogs = rankLogs.filter(log => log.t.toUpperCase() !== oldTeamName.toUpperCase()); 
+        rankLogs.push({ id: 'r'+Date.now(), t: newT, k: newK, w: newW, p: newP, ts: Date.now() }); 
+        localStorage.setItem('demoRankLogs_v7', JSON.stringify(rankLogs)); alert("Saved!"); renderAdmin();
     }
     
     function delRank(teamName) { 
         rankLogs = rankLogs.filter(log => log.t.toUpperCase() !== teamName.toUpperCase()); 
-        localStorage.setItem('demoRankLogs_v6', JSON.stringify(rankLogs)); renderAdmin(); 
+        localStorage.setItem('demoRankLogs_v7', JSON.stringify(rankLogs)); renderAdmin(); 
     }
     
     function addRankingManually() {
@@ -666,15 +702,15 @@
         if(!t) return;
         let pts = (k*10) + (w*100);
         rankLogs.push({ id: 'r'+Date.now(), t, k, w, p: pts, ts: Date.now() });
-        localStorage.setItem('demoRankLogs_v6', JSON.stringify(rankLogs));
+        localStorage.setItem('demoRankLogs_v7', JSON.stringify(rankLogs));
         document.getElementById('newRankT').value=''; document.getElementById('newRankK').value=''; document.getElementById('newRankW').value='';
         renderAdmin();
     }
 
     function resetData() {
         if(confirm("⚠️ SAFE RESET: Sirf aaj ki bookings clear hongi. Matches, Rankings aur Tournaments safe rahenge. Confirm?")) {
-            players = []; // Only clearing bookings
-            localStorage.setItem('demoPlayers_v6', JSON.stringify(players));
+            players = []; 
+            localStorage.setItem('demoPlayers_v7', JSON.stringify(players));
             alert("✅ System is ready for the new day!");
             renderAdmin(); 
         }
